@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping(path = "/tasks")
 public class TasksController  {
@@ -27,8 +29,34 @@ public class TasksController  {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
     @GetMapping(path = "/all")
     public @ResponseBody Iterable<Tasks> getTasks(){
         return taskRepository.findAll();
     }
+
+    @PutMapping(path = "/update/{taskId}")
+    public ResponseEntity<Tasks> updateTask(@PathVariable String taskId, @RequestBody Tasks updatedTask) {
+        try {
+            Optional<Tasks> existingTaskOptional = taskRepository.findById(taskId);
+
+            if (existingTaskOptional.isPresent()) {
+                Tasks existingTask = existingTaskOptional.get();
+                updatedTask.setTaskId(taskId);
+                existingTask.setTitle(updatedTask.getTitle());
+                existingTask.setDescription(updatedTask.getDescription());
+                existingTask.setDueDate(updatedTask.getDueDate());
+                existingTask.setPriority(updatedTask.getPriority());
+                existingTask.setCompleted(updatedTask.isCompleted());
+                Tasks savedTask = taskRepository.save(existingTask);
+
+                return ResponseEntity.ok(savedTask);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }
