@@ -58,5 +58,18 @@ public class TasksController  {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    @DeleteMapping(path = "/delete/{taskId}")
+    public ResponseEntity<Void> deleteTask(@PathVariable String taskId) {
+        try {
+            if (taskRepository.existsById(taskId)) {
+                taskRepository.deleteById(taskId);
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }
