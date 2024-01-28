@@ -1,0 +1,46 @@
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+.Tasks{
+    text-align: center;
+}
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+.Tasks-header {
+    background-color: #282c34;
+    padding: 20px;
+    color: white;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.Tasks-header a {
+    color: white;
+    margin-left: 20px;
+    text-decoration:none;
+}
+
+.Tasks-header a:hover {
+    text-decoration: underline;
+}
+
+main {
+    margin: 20px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 10px;
+}
