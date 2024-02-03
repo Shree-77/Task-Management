@@ -1,13 +1,18 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css'; 
 import '../Tasks/TaskPage.css';
 
-const NavBar = ()=>{
+const NavBar = () => {
     return (
-         <header className="Tasks-header">
-            <h1>Task Manager</h1>
-           <Link to="/create-task">Create Task</Link>
-        </header>
-        
-    )
-}
-export default NavBar
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <div className="container">
+                <Link className="navbar-brand" to="/">
+                    <h1>Task Sphere</h1>
+                </Link>
+            </div>
+        </nav>
+    );
+};
+
+export default NavBar;

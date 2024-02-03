@@ -9,7 +9,7 @@ const TaskList = ({ tasks }) => {
           <p>{task.description}</p>
           <p>Due Date: {task.dueDate}</p>
           <p>Priority: {task.priority}</p>
-          <p>Completed: {task.completed ? "Yes" : "No"}</p>
+          <p>Task Status : {task.status}</p>
         </li>
       ))}
     </ul>

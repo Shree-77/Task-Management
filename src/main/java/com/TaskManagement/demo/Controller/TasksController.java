@@ -39,6 +39,8 @@ public class TasksController  {
     @PutMapping(path = "/update/{taskId}")
     public ResponseEntity<Tasks> updateTask(@PathVariable String taskId, @RequestBody Tasks updatedTask) {
         try {
+            System.out.println("Received taskId: " + taskId);
+            System.out.println("Received updatedTask: " + updatedTask);
             Optional<Tasks> existingTaskOptional = taskRepository.findById(taskId);
 
             if (existingTaskOptional.isPresent()) {
@@ -48,7 +50,7 @@ public class TasksController  {
                 existingTask.setDescription(updatedTask.getDescription());
                 existingTask.setDueDate(updatedTask.getDueDate());
                 existingTask.setPriority(updatedTask.getPriority());
-                existingTask.setCompleted(updatedTask.isCompleted());
+                existingTask.setStatus(updatedTask.getStatus());
                 Tasks savedTask = taskRepository.save(existingTask);
 
                 return ResponseEntity.ok(savedTask);

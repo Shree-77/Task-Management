@@ -18,18 +18,18 @@ public class Tasks {
     private LocalDate dueDate;
     @Field
     private TaskPriority priority;
+
     @Field
-    private boolean completed;
+    private TaskStatus status;
 
     public Tasks() {
     }
 
-    public Tasks(String title, String description, LocalDate dueDate, TaskPriority priority, boolean completed) {
+    public Tasks(String title, String description, LocalDate dueDate, TaskPriority priority) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
-        this.completed = completed;
     }
 
     public String getTaskId() {
@@ -72,25 +72,23 @@ public class Tasks {
         this.priority = priority;
     }
 
-    public boolean isCompleted() {
-        return completed;
+    public TaskStatus getStatus() {
+        return status;
     }
 
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
+    public void setStatus(TaskStatus status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
-        return String.format("Task[ taskid='%s',title = '%s' , description='%s', dueDate = '%s' ,priority = '%s', completed = '%s']",
-                taskId,
-                title,
-                description,
-                dueDate,
-                priority,
-                completed
-        );
+        return "Tasks{" +
+                "taskId='" + taskId + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", dueDate=" + dueDate +
+                ", priority=" + priority +
+                ", status=" + status +
+                '}';
     }
-
-
 }

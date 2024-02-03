@@ -26,7 +26,7 @@ body {
 }
 
 .Tasks-header a:hover {
-    text-decoration: underline;
+    color: #D04848;
 }
 
 main {
