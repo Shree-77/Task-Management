@@ -1,5 +1,7 @@
 package com.TaskManagement.demo.Model;
 
+import com.TaskManagement.demo.Model.enums.TaskPriority;
+import com.TaskManagement.demo.Model.enums.TaskStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;

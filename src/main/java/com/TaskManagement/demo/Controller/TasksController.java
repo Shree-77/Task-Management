@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping(path = "/tasks")
+@RequestMapping(path = "/task")
 public class TasksController  {
 
     private final TaskRepository taskRepository;
@@ -21,7 +21,7 @@ public class TasksController  {
         this.taskRepository = taskRepository;
     }
 
- @PostMapping(path = "/add")
+ @PostMapping(path = "/add-task")
     public @ResponseBody ResponseEntity<Tasks> addTask(@RequestBody Tasks task){
         try{
             Tasks savedTask = taskRepository.save(task);
@@ -31,12 +31,12 @@ public class TasksController  {
         }
     }
 
-    @GetMapping(path = "/all")
+    @GetMapping(path = "/tasks")
     public @ResponseBody Iterable<Tasks> getTasks(){
         return taskRepository.findAll();
     }
 
-    @PutMapping(path = "/update/{taskId}")
+    @PutMapping(path = "/update-task/{taskId}")
     public ResponseEntity<Tasks> updateTask(@PathVariable String taskId, @RequestBody Tasks updatedTask) {
         try {
             System.out.println("Received taskId: " + taskId);
@@ -61,7 +61,7 @@ public class TasksController  {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    @DeleteMapping(path = "/delete/{taskId}")
+    @DeleteMapping(path = "/delete-task/{taskId}")
     public ResponseEntity<Void> deleteTask(@PathVariable String taskId) {
         try {
             if (taskRepository.existsById(taskId)) {
