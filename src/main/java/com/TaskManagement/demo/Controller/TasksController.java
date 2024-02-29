@@ -1,7 +1,9 @@
 package com.TaskManagement.demo.Controller;
 
 
+import com.TaskManagement.demo.Model.Project;
 import com.TaskManagement.demo.Model.Tasks;
+import com.TaskManagement.demo.Repository.ProjectRepository;
 import com.TaskManagement.demo.Repository.TaskRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,20 +14,30 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping(path = "/task")
+@RequestMapping(path = "/project/{projectId}")
 public class TasksController  {
 
     private final TaskRepository taskRepository;
+    private final ProjectRepository projectRepository;
 
-    public TasksController(TaskRepository taskRepository) {
+
+    public TasksController(TaskRepository taskRepository, ProjectRepository projectRepository) {
         this.taskRepository = taskRepository;
+        this.projectRepository = projectRepository;
     }
 
- @PostMapping(path = "/add-task")
-    public @ResponseBody ResponseEntity<Tasks> addTask(@RequestBody Tasks task){
+    @PostMapping(path = "/add")
+    public @ResponseBody ResponseEntity<Tasks> addTask(@PathVariable String projectId , @RequestBody Tasks task){
         try{
-            Tasks savedTask = taskRepository.save(task);
+            Optional<Project> project = projectRepository.findById(projectId);
+            Tasks savedTask = null;
+            if(project.isPresent()){
+                Project ExistingProject = project.get();
+                 savedTask = taskRepository.save(task);
+                ExistingProject.getTasks().add(savedTask);
+            }
             return ResponseEntity.ok(savedTask);
+
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -37,22 +49,17 @@ public class TasksController  {
     }
 
     @PutMapping(path = "/update-task/{taskId}")
-    public ResponseEntity<Tasks> updateTask(@PathVariable String taskId, @RequestBody Tasks updatedTask) {
+    public ResponseEntity<Tasks> updateTask(@PathVariable String projectId, @PathVariable String taskId, @RequestBody Tasks updatedTask) {
         try {
-            System.out.println("Received taskId: " + taskId);
-            System.out.println("Received updatedTask: " + updatedTask);
             Optional<Tasks> existingTaskOptional = taskRepository.findById(taskId);
-
             if (existingTaskOptional.isPresent()) {
                 Tasks existingTask = existingTaskOptional.get();
-                updatedTask.setTaskId(taskId);
                 existingTask.setTitle(updatedTask.getTitle());
                 existingTask.setDescription(updatedTask.getDescription());
                 existingTask.setDueDate(updatedTask.getDueDate());
                 existingTask.setPriority(updatedTask.getPriority());
                 existingTask.setStatus(updatedTask.getStatus());
                 Tasks savedTask = taskRepository.save(existingTask);
-
                 return ResponseEntity.ok(savedTask);
             } else {
                 return ResponseEntity.notFound().build();
@@ -61,6 +68,7 @@ public class TasksController  {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
     @DeleteMapping(path = "/delete-task/{taskId}")
     public ResponseEntity<Void> deleteTask(@PathVariable String taskId) {
         try {

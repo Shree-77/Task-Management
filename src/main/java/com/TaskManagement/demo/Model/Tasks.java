@@ -14,6 +14,7 @@ public class Tasks {
     private String taskId;
     @Field
     private String title;
+
     @Field
     private String description;
     @Field
@@ -32,6 +33,7 @@ public class Tasks {
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
+
     }
 
     public String getTaskId() {

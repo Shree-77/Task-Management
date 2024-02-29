@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -18,11 +18,33 @@ import java.util.Optional;
 public class ProjectController {
     private final ProjectRepository projectRepository ;
 
+
+
     public ProjectController(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
+
     }
 
-    @PostMapping(path = "/add-project")
+    @GetMapping(path = "/")
+    public @ResponseBody Iterable<Project> getProjects(){
+        return projectRepository.findAll();
+    }
+
+    @DeleteMapping(path = "/{projectId}")
+    public ResponseEntity<Void> deleteProject(@PathVariable String projectId) {
+        try {
+            if (projectRepository.existsById(projectId)) {
+                projectRepository.deleteById(projectId);
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping(path = "/")
     public @ResponseBody ResponseEntity<Project> addProject(@RequestBody Project project) {
         try {
             Project savedProject = projectRepository.save(project);
@@ -32,34 +54,21 @@ public class ProjectController {
         }
     }
 
-    @GetMapping(path = "/projects")
-    public @ResponseBody Iterable<Project> getTasks(){
-        return projectRepository.findAll();
-    }
-    @DeleteMapping(path = "/delete-project/{projectId}")
-    public ResponseEntity<Void> deleteProject(@PathVariable String projectID) {
-        try {
-            if (projectRepository.existsById(projectID)) {
-                projectRepository.deleteById(projectID);
-                return ResponseEntity.noContent().build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-    @PutMapping(path = "/update-project/{projectId}")
+    @PutMapping(path = "/{projectId}")
     public ResponseEntity<Project> updateProject(@PathVariable String projectId, @RequestBody Project updatedProject) {
         try {
+            // Retrieve the existing project from the database
             Optional<Project> existingProjectOptional = projectRepository.findById(projectId);
 
             if (existingProjectOptional.isPresent()) {
+                // Get the existing project
                 Project existingProject = existingProjectOptional.get();
-                updatedProject.setProjectId(projectId);
-                existingProject.setTitle(updatedProject.getTitle());
-                List<Tasks> updatedTasks = updatedProject.getTasks();
-                existingProject.setTasks(updatedTasks);
+
+                // Update the project's title if it's provided in the updated project
+                if (updatedProject.getTitle() != null) {
+                    existingProject.setTitle(updatedProject.getTitle());
+                }
+
                 Project savedProject = projectRepository.save(existingProject);
                 return ResponseEntity.ok(savedProject);
             } else {
@@ -69,5 +78,6 @@ public class ProjectController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 }
